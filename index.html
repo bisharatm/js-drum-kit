@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JS Drum Kit</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div class="keys">
+            <div data-key="90" class="key">
+                <kbd onclick="playSoundOnClick(90)">Z</kbd> <!-- Comment: assign event handler func. to onclick event; pass keycode as arg to func.; hard-coded for now -->
+                <span class="sound">clap</span>
+            </div>
+            <div data-key="88" class="key">
+                <kbd onclick="playSoundOnClick(88)">X</kbd>
+                <span class="sound">hithat</span>
+            </div>
+            <div data-key="67" class="key">
+                <kbd onclick="playSoundOnClick(67)">C</kbd>
+                <span class="sound">kick</span>
+            </div>
+            <div data-key="86" class="key">
+                <kbd onclick="playSoundOnClick(86)">V</kbd>
+                <span class="sound">openhat</span>
+            </div>
+            <div data-key="66" class="key">
+                <kbd onclick="playSoundOnClick(66)">B</kbd>
+                <span class="sound">bom</span>
+            </div>
+            <div data-key="78" class="key">
+                <kbd onclick="playSoundOnClick(78)">N</kbd>
+                <span class="sound">ride</span>
+            </div>
+            <div data-key="77" class="key">
+                <kbd onclick="playSoundOnClick(77)">M</kbd>
+                <span class="sound">snare</span>
+            </div>
+        </div>
+
+		
+        <audio data-key="90" src="./sounds/crash.wav"></audio>
+        <audio data-key="88" src="./sounds/crash.wav"></audio>
+        <audio data-key="67" src="./sounds/crash.wav"></audio>
+        <audio data-key="86" src="./sounds/crash.wav"></audio>
+        <audio data-key="66" src="./sounds/crash.wav"></audio>
+        <audio data-key="78" src="./sounds/crash.wav"></audio>
+        <audio data-key="77" src="./sounds/crash.wav"></audio>
+
+        <script>
+            function playSound(e) {
+                const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
+                //console.log(audio)
+                const key = document.querySelector(`.key[data-key="${e.keyCode}"]`)
+                if(!audio) return;
+                audio.currentTime = 0
+                audio.play()
+                key.classList.add('playing')
+            }
+			
+			// I added this function which works as event-handler for the onclick event on the <kbd> elements above.
+		    // This func works exactly like your event handler above for the 'keydown' event of 'window' element (except for one tiny diff, see comment below). 
+			function playSoundOnClick(keyCode) {				
+				const audio = document.querySelector(`audio[data-key="${keyCode}"]`) // reading keyCode arg directly
+                const key = document.querySelector(`.key[data-key="${keyCode}"]`)
+                if(!audio) return;
+                audio.currentTime = 0
+                audio.play()
+                key.classList.add('playing')
+			}
+
+            function removeTransition(e) {
+                if(e.propertyName !== 'transform') return;
+                this.classList.remove('playing')
+            }
+
+            const keys = document.querySelectorAll('.key')
+            keys.forEach(key => key.addEventListener('transitionend', removeTransition))
+
+            window.addEventListener('keydown', playSound)
+        </script>
+    </body>
+</html>
